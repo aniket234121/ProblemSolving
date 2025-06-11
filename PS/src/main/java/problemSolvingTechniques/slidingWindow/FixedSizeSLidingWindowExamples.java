@@ -1,5 +1,6 @@
 package problemSolvingTechniques.slidingWindow;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class FixedSizeSLidingWindowExamples {
@@ -134,7 +135,7 @@ Sliding windows:
      */
     public static int calculateMaxInArray(int nums[],int start,int end)
     {
-        int max=0;
+        int max=nums[start];
         for(int i=start;i<end;i++)
         {
             max=Math.max(nums[i],max);
@@ -166,6 +167,56 @@ Sliding windows:
         return result;
     }
 
+    /*
+    3. Longest Substring Without Repeating Characters (Variable Size)
+    Problem:
+    Given a string s, return the length of the longest substring without repeating characters.
+
+            Input:
+
+    s: String
+    Output:
+
+    Integer representing maximum length of substring with all unique characters
+    Test Case 1: Input: s = "abcabcbb" Output: 3
+
+    Explanation:
+    Valid substrings without repeating characters:
+
+            "abc" (length 3)
+    Other substrings like "bca", "cab" also have length 3
+    Maximum = 3
+    Test Case 2: Input: s = "bbbbb" Output: 1
+
+    Explanation:
+    All characters are 'b', so only valid substrings are individual characters: "b"
+    Maximum = 1
+*/
+
+    public static int maxUniqueSubstring(String str)
+    {
+        char[] array=str.toCharArray();
+//        int left=0;
+        int right=0;
+        int maxLength=0;
+        ArrayList<Character> list=new ArrayList<>();
+        while(right<array.length)
+        {
+            boolean notUnique=list.contains(array[right]);
+            list.add(array[right]);
+
+            while(notUnique)
+            {
+               if(list.remove(0)==array[right])
+               {notUnique=false;}
+            }
+            maxLength=Math.max(maxLength,list.size());
+
+            right++;
+        }
+        return maxLength;
+    }
+
     public static void main(String[] args) {
         int[] nums=new int[]{1,12,-5,-6,50,3};
 
@@ -183,6 +234,8 @@ Sliding windows:
         int[]array2=new int[]{4, 2, 12, 3, 8};
         System.out.println(Arrays.toString(maxInWindow(array2,2)));
 
-
+        //Q3.
+        String str="bbbbbb";
+        System.out.println(maxUniqueSubstring(str));
     }
 }
