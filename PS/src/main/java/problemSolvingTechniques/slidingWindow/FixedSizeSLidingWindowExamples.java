@@ -2,6 +2,8 @@ package problemSolvingTechniques.slidingWindow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FixedSizeSLidingWindowExamples {
 
@@ -81,20 +83,17 @@ Subarrays of size 2:
 Maximum sum = 10
 
      */
-    public static int maxSumInSubarray(int[] nums,int k)
-    {
-        int maxSum,windowSum;
-        maxSum=windowSum=0;
-        for(int i=0;i<k;i++)
-        {
-            windowSum+=nums[i];
+    public static int maxSumInSubarrayOfSizeK(int[] nums, int k) {
+        int maxSum, windowSum;
+        maxSum = windowSum = 0;
+        for (int i = 0; i < k; i++) {
+            windowSum += nums[i];
         }
-        maxSum=windowSum;
+        maxSum = windowSum;
 
-        for(int i=k;i<nums.length;i++)
-        {
-            windowSum+=(nums[i]-nums[i-k]);
-            maxSum=Math.max(maxSum,windowSum);
+        for (int i = k; i < nums.length; i++) {
+            windowSum += (nums[i] - nums[i - k]);
+            maxSum = Math.max(maxSum, windowSum);
         }
         return maxSum;
     }
@@ -133,33 +132,77 @@ Sliding windows:
 [3, 8] → max = 8 ✅
 
      */
-    public static int calculateMaxInArray(int nums[],int start,int end)
-    {
-        int max=nums[start];
-        for(int i=start;i<end;i++)
-        {
-            max=Math.max(nums[i],max);
+    public static int calculateMaxInArray(int nums[], int start, int end) {
+        int max = nums[start];
+        for (int i = start; i < end; i++) {
+            max = Math.max(nums[i], max);
         }
         return max;
     }
 
-    public static int[] maxInWindow(int[]nums,int k)
-    {
-        int counter=k;
-        int [] result=new int[nums.length-k+1];
-        int windowMax=calculateMaxInArray(nums,0,k);
-        for(int i=0;i<nums.length-k+1;i++)
-        {
-            int removeValue=nums[i];
-            result[i]=windowMax;
-            if(windowMax!=removeValue)
-            {
-                windowMax=Math.max(windowMax,nums[counter]);
-                if(counter<nums.length-1)counter++;
+    /*
+    *Given an integer array arr[] and a number k. Find the count of distinct elements in every window of size k in the array.
+
+Examples:
+
+Input: arr[] = [1, 2, 1, 3, 4, 2, 3], k = 4
+Output:  [3, 4, 4, 3]
+Explanation: Window 1 of size k = 4 is 1 2 1 3. Number of distinct elements in this window are 3.
+Window 2 of size k = 4 is 2 1 3 4. Number of distinct elements in this window are 4.
+Window 3 of size k = 4 is 1 3 4 2. Number of distinct elements in this window are 4.
+Window 4 of size k = 4 is 3 4 2 3. Number of distinct elements in this window are 3.
+Input: arr[] = [4, 1, 1], k = 2
+Output: [2, 1]
+Explanation: Window 1 of size k = 2 is 4 1. Number of distinct elements in this window are 2.
+Window 2 of size k = 2 is 1 1. Number of distinct elements in this window is 1.
+Input: arr[] = [1, 1, 1, 1, 1], k = 3
+Output: [1, 1, 1]
+    * */
+
+    ArrayList<Integer> countDistinct(int arr[], int k) {
+        ArrayList<Integer> result = new ArrayList<>();
+        HashMap<Integer, Integer> freqMap = new HashMap<>();
+
+        // Build initial window
+        for (int i = 0; i < k; i++) {
+            freqMap.put(arr[i], freqMap.getOrDefault(arr[i], 0) + 1);
+        }
+        result.add(freqMap.size());
+
+        // Slide the window
+        for (int i = k; i < arr.length; i++) {
+            // Remove the element going out of the window
+            int outElem = arr[i - k];
+            freqMap.put(outElem, freqMap.get(outElem) - 1);
+            if (freqMap.get(outElem) == 0) {
+                freqMap.remove(outElem);
             }
-            else {
-                windowMax=calculateMaxInArray(nums,i+1,i+k+1);
-                if(counter<nums.length-1)counter++;
+
+            // Add the new element coming into the window
+            int inElem = arr[i];
+            freqMap.put(inElem, freqMap.getOrDefault(inElem, 0) + 1);
+
+            // Add current distinct count
+            result.add(freqMap.size());
+        }
+
+        return result;
+    }
+
+
+    public static int[] maxInWindow(int[] nums, int k) {
+        int counter = k;
+        int[] result = new int[nums.length - k + 1];
+        int windowMax = calculateMaxInArray(nums, 0, k);
+        for (int i = 0; i < nums.length - k + 1; i++) {
+            int removeValue = nums[i];
+            result[i] = windowMax;
+            if (windowMax != removeValue) {
+                windowMax = Math.max(windowMax, nums[counter]);
+                if (counter < nums.length - 1) counter++;
+            } else {
+                windowMax = calculateMaxInArray(nums, i + 1, i + k + 1);
+                if (counter < nums.length - 1) counter++;
             }
 
         }
@@ -193,49 +236,137 @@ Sliding windows:
     Maximum = 1
 */
 
-    public static int maxUniqueSubstring(String str)
-    {
-        char[] array=str.toCharArray();
+    public static int maxUniqueSubstring(String str) {
+        char[] array = str.toCharArray();
 //        int left=0;
-        int right=0;
-        int maxLength=0;
-        ArrayList<Character> list=new ArrayList<>();
-        while(right<array.length)
-        {
-            boolean notUnique=list.contains(array[right]);
+        int right = 0;
+        int maxLength = 0;
+        ArrayList<Character> list = new ArrayList<>();
+        while (right < array.length) {
+            boolean notUnique = list.contains(array[right]);
             list.add(array[right]);
 
-            while(notUnique)
-            {
-               if(list.remove(0)==array[right])
-               {notUnique=false;}
+            while (notUnique) {
+                if (list.remove(0) == array[right]) {
+                    notUnique = false;
+                }
             }
-            maxLength=Math.max(maxLength,list.size());
+            maxLength = Math.max(maxLength, list.size());
 
             right++;
         }
         return maxLength;
     }
 
+    /*
+
+    4. Minimum Size Subarray Sum (Variable Size)
+Problem:
+Given an array of positive integers nums and a target integer target, return the minimum length of a contiguous subarray whose sum is greater than or equal to target. If no such subarray exists, return 0.
+
+Input:
+
+nums: List of positive integers
+target: Integer
+Output:
+
+Integer representing the minimum length
+Test Case 1: Input: target = 7, nums = [2, 3, 1, 2, 4, 3] Output: 2
+
+Explanation:
+Subarrays with sum ≥ 7:
+
+[4, 3] → sum = 7, length = 2 ✅
+Other subarrays are longer or smaller in sum
+Minimum length = 2
+Test Case 2: Input: target = 15, nums = [1, 2, 3, 4, 5] Output: 5
+
+Explanation:
+Only subarray with sum ≥ 15 is entire array: [1, 2, 3, 4, 5]
+Sum = 15, length = 5
+Minimum length = 5
+
+     */
+    public static int minimumSubarraySum(int[] nums, int target) {
+        int sum = 0;
+        int minLength = Integer.MAX_VALUE;
+        int windowLength = 0;
+        int right = 0;
+        int left = 0;
+        while (right < nums.length) {
+            sum += nums[right];
+            windowLength++;
+
+            while (sum >= target) {
+                minLength = Math.min(windowLength, minLength);
+                sum -= nums[left];
+                left++;
+                windowLength--;
+            }
+
+            right++;
+        }
+        return minLength;
+    }
+
+    public static int longestSubstring(String str, int k) {
+
+        int right = 0;
+
+        int maxLength = 0;
+        int windowLength = 0;
+        char[] arr = str.toCharArray();
+        Map<Character, Integer> map = new HashMap<>();
+        while (right < arr.length) {
+            if (map.containsKey(arr[right]))
+                map.put(arr[right], map.get(arr[right]) + 1);
+            else map.put(arr[right], 1);
+            windowLength++;
+
+            boolean check = true;
+            for (Character ch : map.keySet()) {
+                if (map.get(ch) < k) {
+                    check = false;
+                }
+            }
+            if (check) {
+                maxLength = Math.max(maxLength, windowLength);
+            }
+
+            right++;
+        }
+        return maxLength;
+    }
+
+
     public static void main(String[] args) {
-        int[] nums=new int[]{1,12,-5,-6,50,3};
+        int[] nums = new int[]{1, 12, -5, -6, 50, 3};
 
         //Find Max Avg Q .643
-        System.out.println("max consecutive avg from array: "+ Arrays.toString(nums));
-        System.out.println(findMaxAverage(nums,4)); //output- 12.7500
+        System.out.println("max consecutive avg from array: " + Arrays.toString(nums));
+        System.out.println(findMaxAverage(nums, 4)); //output- 12.7500
 
 
         //practice problem
         // Q.1
-        int [] array1=new int[]{2, 1, 5, 1, 3, 2};
-        System.out.println(maxSumInSubarray(array1,3));
+        int[] array1 = new int[]{2, 1, 5, 1, 3, 2};
+        System.out.println(maxSumInSubarrayOfSizeK(array1, 3));
 
         //Q.2
-        int[]array2=new int[]{4, 2, 12, 3, 8};
-        System.out.println(Arrays.toString(maxInWindow(array2,2)));
+        int[] array2 = new int[]{4, 2, 12, 3, 8};
+        System.out.println(Arrays.toString(maxInWindow(array2, 2)));
 
         //Q3.
-        String str="bbbbbb";
+        String str = "bbbbbb";
         System.out.println(maxUniqueSubstring(str));
+
+        //Q.4
+        System.out.println("minimum size of sum: " + minimumSubarraySum(new int[]{1, 2, 3, 4, 5}, 15));
+        System.out.println("minimum size of sum: " + minimumSubarraySum(new int[]{2, 3, 1, 2, 4, 3}, 7));
+
+        System.out.println(longestSubstring("bbaaacbd", 3));
+
+
+
     }
 }
