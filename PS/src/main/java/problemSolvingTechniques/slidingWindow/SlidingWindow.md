@@ -8,7 +8,7 @@ It is typically applied to:
 * Strings
 * Lists
 
-![1_m1WP0k9cHRkcTixpfayOdA.gif](1_m1WP0k9cHRkcTixpfayOdA.gif)
+![1_m1WP0k9cHRkcTixpfayOdA.gif](../../imgs/1_m1WP0k9cHRkcTixpfayOdA.gif)
 
 ## Types
 

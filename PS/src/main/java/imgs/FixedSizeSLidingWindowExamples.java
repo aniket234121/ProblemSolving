@@ -1,4 +1,4 @@
-package problemSolvingTechniques.slidingWindow;
+package imgs;
 
 import java.util.ArrayList;
 import java.util.Arrays;

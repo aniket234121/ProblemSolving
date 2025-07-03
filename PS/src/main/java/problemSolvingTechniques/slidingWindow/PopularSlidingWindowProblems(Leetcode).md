@@ -17,7 +17,7 @@ Explanation:
 The substring with start index = 0 is "cba", which is an anagram of "abc".
 The substring with start index = 6 is "bac", which is an anagram of "abc".
 
-![img.png](img.png)
+![img.png](../../imgs/img.png)
 
 ### 2. **Binary Subarrays with sum k**
 
@@ -77,7 +77,7 @@ nums[4...4]
 
 Total = 4 - 2 + 1 = 3 subarrays.
 ```
-![img_1.png](img_1.png)
+![img_1.png](../../imgs/img_1.png)
 
 ### 3. Longest repeating character replacement 
 
@@ -108,4 +108,4 @@ The key idea is:
 
 * Otherwise, update the maxLength.
 
-![img_2.png](img_2.png)
+![img_2.png](../../imgs/img_2.png)
